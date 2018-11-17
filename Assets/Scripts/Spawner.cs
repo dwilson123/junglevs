@@ -63,11 +63,11 @@ public class Spawner : MonoBehaviour {
                     {
                         spawned.target = fixate;
                     }
-                    spawned.health = factor;
+					spawned.health = spawned.health * factor;
                     spawned.team = this.team;
                     spawned.parent = this;
                     spawned.drop = drop;
-                    go.transform.localScale += new Vector3(factor / 4, factor / 4, factor / 4);
+					go.transform.localScale += getFactorScale ();
 
                     spawns.Add(spawned);
                 }
@@ -75,6 +75,12 @@ public class Spawner : MonoBehaviour {
         }
     }
 
+
+	private Vector3 getFactorScale()
+	{
+		float factorScale = factor * 0.1f;
+		return new Vector3 (factorScale, factorScale, factorScale);
+	}
 
     public void AssignNewTarget(GameObject go)
     {

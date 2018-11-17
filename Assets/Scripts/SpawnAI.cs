@@ -10,7 +10,7 @@ public class SpawnAI : MonoBehaviour {
 
 
     //Variables that can be augmented through upgrades
-    public int health = 3;
+    public int health;
     public int team;
     public int damage = 1;
     public float speed = .01f;
@@ -30,15 +30,20 @@ public class SpawnAI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //If this is not engaged in combat then move to fixate position
-        if (!inCombat && target != null && !Vector3.zero.Equals(target))
-            this.transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
-        else if(combatWith != null)
-            combatWith.GetComponent<SpawnAI>().TakeDamage();
-        else
+		if (!inCombat && target != null && !Vector3.zero.Equals (target))
+			this.transform.position = Vector3.MoveTowards (transform.position, target.transform.position, speed);
+		//If this is engaged in combat and can attack then attack
+		else if (combatWith != null && canAttack) {
+			combatWith.GetComponent<SpawnAI> ().TakeDamage ();
+			canAttack = false;
+			StartCoroutine (WaitForCooldown ());
+		}
+		//Most likely the target died
+		else if(combatWith == null)
         {
-            //Most likely the target died
             inCombat = false;
         }
+		//implicit else -- do nothing
 
         if (this.transform.position.Equals(target))
         {
@@ -55,7 +60,7 @@ public class SpawnAI : MonoBehaviour {
             return;
 
         SpawnAI ai = other.gameObject.GetComponent<SpawnAI>();
-        if (ai != null && canAttack)
+		if (ai != null && ai.team != this.team)
         {
             canAttack = false;
             inCombat = true;
@@ -95,6 +100,7 @@ public class SpawnAI : MonoBehaviour {
     public void TakeDamage(int amount)
     {
         health -= amount;
+		Debug.Log ("Taking " + amount + " points of damage.  Remaining health is " + health);
         if (health <= 0)
         {
             drop.Spawn(this.gameObject);

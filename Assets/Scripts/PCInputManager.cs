@@ -10,7 +10,8 @@ public class PCInputManager : MonoBehaviour {
     Camera cam;
     Weapon weapon;
 
-    private int value = 0;
+	//Starting coins
+    public int value = 0;
     private int upgradeCost = 1;
 
     //Set these in editor
@@ -80,7 +81,6 @@ public class PCInputManager : MonoBehaviour {
         //all spawners are destroyed
         bool upgraded = false;
         Spawner[] spawners = FindObjectsOfType<Spawner>();
-        Debug.Log("Found " + spawners.Length + " objects.");
 
         foreach(Spawner spawner in FindObjectsOfType<Spawner>())
         {
