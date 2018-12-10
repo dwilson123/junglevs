@@ -5,14 +5,14 @@ using UnityEngine.UI;
 public class PCInputManager : MonoBehaviour {
 
     Vector3 target;
-    const float speed = .015f;
+    public const float speed = .03f;
     float y;
     Camera cam;
     Weapon weapon;
 
 	//Starting coins
     public int value = 0;
-    private int upgradeCost = 1;
+    private int upgradeCost = 10;
 
     //Set these in editor
     public int team;
@@ -55,7 +55,7 @@ public class PCInputManager : MonoBehaviour {
         //If we have a target move towards it
         if (target != Vector3.zero)
         {
-            this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, target, .02f);
+			this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, target, speed);
         }
 
         if (Input.GetKey(KeyCode.Space))

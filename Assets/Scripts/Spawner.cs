@@ -61,12 +61,24 @@ public class Spawner : MonoBehaviour {
                     //Some items assigned don't immediately fixate
                     if (fixate != null)
                     {
+						/*
+						Vector3 targetDir = fixate.transform.position - go.transform.position;
+						float step = spawned.speed * Time.deltaTime;
+						Vector3 newDir = Vector3.RotateTowards (go.transform.forward, targetDir, step, 0.0f);
+						Debug.DrawRay (go.transform.position, newDir, Color.red);
+						go.transform.rotation = Quaternion.LookRotation (newDir);
+						*/
+
+						go.transform.LookAt (fixate.transform);
                         spawned.target = fixate;
+						//Quaternion rotation = Quaternion.LookRotation (fixate.transform.position - go.transform.position);
+						//go.transform.rotation = Quaternion.Slerp (go.transform.rotation, rotation, Time.deltaTime * 2);
                     }
 					spawned.health = spawned.health * factor;
                     spawned.team = this.team;
                     spawned.parent = this;
                     spawned.drop = drop;
+					spawned.damage = spawned.damage * factor;
 					go.transform.localScale += getFactorScale ();
 
                     spawns.Add(spawned);

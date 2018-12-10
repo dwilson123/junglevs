@@ -35,7 +35,7 @@ public class NPCSpawner : MonoBehaviour {
             go.GetComponent<SpawnAI>().target = fixate;
             go.GetComponent<SpawnAI>().health = factor;
             go.GetComponent<SpawnAI>().team = this.team;
-            go.transform.localScale += new Vector3(factor / 4, factor / 4, factor / 4);
+            //go.transform.localScale += new Vector3(factor / 4, factor / 4, factor / 4);
         }
     }
 }

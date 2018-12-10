@@ -30,7 +30,7 @@ public class Weapon : MonoBehaviour {
             SpawnAI ai = other.GetComponent<SpawnAI>();
             if (ai.team != this.team)
             {
-                ai.TakeDamage(20);
+                ai.TakeDamage(200);
             }
         }
     }

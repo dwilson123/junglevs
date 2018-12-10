@@ -27,26 +27,44 @@ public class SpawnAI : MonoBehaviour {
     private GameObject combatWith;
     private bool canAttack = true;
 
+	private Animator anim;
+
+	private int sthAttack = Animator.StringToHash("Attack");
+
+	void Start(){
+		anim = GetComponent<Animator> ();
+	}
+
 	// Update is called once per frame
 	void Update () {
         //If this is not engaged in combat then move to fixate position
-		if (!inCombat && target != null && !Vector3.zero.Equals (target))
+		if (!inCombat && target != null && !Vector3.zero.Equals (target)) {
+			if (anim != null) {
+				anim.SetFloat ("Speed", speed);
+				anim.ResetTrigger (sthAttack);
+			}
 			this.transform.position = Vector3.MoveTowards (transform.position, target.transform.position, speed);
+			this.transform.LookAt (target.transform);
+		}
 		//If this is engaged in combat and can attack then attack
 		else if (combatWith != null && canAttack) {
+			if (anim != null) {
+				anim.SetFloat ("Speed", 0);
+			}
 			combatWith.GetComponent<SpawnAI> ().TakeDamage ();
 			canAttack = false;
 			StartCoroutine (WaitForCooldown ());
 		}
 		//Most likely the target died
-		else if(combatWith == null)
-        {
-            inCombat = false;
-        }
+		else if (combatWith == null) {
+			inCombat = false;
+		}
+
 		//implicit else -- do nothing
 
         if (this.transform.position.Equals(target))
         {
+			
             Destroy(this.gameObject);
         }
 
@@ -62,6 +80,9 @@ public class SpawnAI : MonoBehaviour {
         SpawnAI ai = other.gameObject.GetComponent<SpawnAI>();
 		if (ai != null && ai.team != this.team)
         {
+			if (anim != null) {
+				anim.SetTrigger (sthAttack);
+			}
             canAttack = false;
             inCombat = true;
             combatWith = other.gameObject;
@@ -90,6 +111,9 @@ public class SpawnAI : MonoBehaviour {
     {
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
+		if (anim != null) {
+			anim.ResetTrigger (sthAttack);
+		}
     }
 
     public void TakeDamage()
@@ -100,7 +124,6 @@ public class SpawnAI : MonoBehaviour {
     public void TakeDamage(int amount)
     {
         health -= amount;
-		Debug.Log ("Taking " + amount + " points of damage.  Remaining health is " + health);
         if (health <= 0)
         {
             drop.Spawn(this.gameObject);
